@@ -1,0 +1,6 @@
+Flask>=3.0
+Flask-CORS>=4.0
+PyMySQL>=1.1
+# Needed by PyMySQL to log in to MySQL 8 (caching_sha2_password)
+cryptography>=42
+PyJWT>=2.8

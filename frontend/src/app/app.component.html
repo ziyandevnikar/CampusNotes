@@ -1,0 +1,14 @@
+<main class="hero">
+  <h1>CampusNotes</h1>
+  <p>Centralized Academic Notes Platform</p>
+
+  <p class="status" [class.ok]="backendStatus() === 'connected'" [class.bad]="backendStatus() === 'unreachable'">
+    @if (backendStatus() === 'checking') {
+      Checking backend...
+    } @else if (backendStatus() === 'connected') {
+      Backend connected: {{ backendMessage() }}
+    } @else {
+      Backend not reachable. Is Flask running on port 5000?
+    }
+  </p>
+</main>

@@ -1,0 +1,17 @@
+.hero {
+  max-width: 640px;
+  margin: 15vh auto 0;
+  text-align: center;
+  padding: 0 16px;
+}
+h1 {
+  font-size: 2.5rem;
+  margin: 0 0 8px;
+}
+.status {
+  margin-top: 32px;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+.status.ok { color: #15803d; }
+.status.bad { color: #b91c1c; }

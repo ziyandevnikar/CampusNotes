@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+# Node / Angular
+node_modules/
+frontend/dist/
+frontend/.angular/
+# Uploaded files
+backend/uploads/*
+!backend/uploads/.gitkeep
+# Env / OS
+.env
+.DS_Store
