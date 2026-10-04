@@ -1,0 +1,53 @@
+<section class="page">
+  @if (view(); as v) {
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        @for (crumb of v.crumbs; track $index; let last = $last) {
+          <li>
+            @if (last) {
+              <span aria-current="page">{{ crumb.label }}</span>
+            } @else {
+              <a [routerLink]="crumb.link">{{ crumb.label }}</a>
+            }
+          </li>
+        }
+      </ol>
+    </nav>
+  }
+
+  <header class="page-header">
+    <h1>{{ view()?.title ?? 'Browse notes' }}</h1>
+    @if (view(); as v) {
+      <p class="muted">{{ v.subtitle }}</p>
+    }
+  </header>
+
+  <app-state
+    [loading]="loading()"
+    [loadingText]="loadingText()"
+    [error]="error()"
+    [empty]="hasNoChoices()"
+    [emptyText]="view()?.emptyText ?? 'Nothing found.'"
+    (retry)="reload()"
+  >
+    @if (view(); as v) {
+      @if (v.allNotes) {
+        <p>
+          <a class="btn btn-secondary" routerLink="/notes" [queryParams]="v.allNotes">View all notes in this subject</a>
+        </p>
+      }
+      <ul class="choice-grid">
+        @for (choice of v.choices; track choice.id) {
+          <li>
+            <a class="choice-card" [routerLink]="choice.link" [queryParams]="choice.query">
+              <span>{{ choice.label }}</span>
+              <span class="choice-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        }
+      </ul>
+    }
+  </app-state>
+
+  <p class="center-link"><a routerLink="/notes">Or search all notes →</a></p>
+</section>

@@ -1,0 +1,35 @@
+<section class="auth-card card">
+  <h1>Log in</h1>
+  <p class="muted">Welcome back to CampusNotes.</p>
+
+  @if (notice) {
+    <div class="alert alert-info" role="status">{{ notice }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-error" role="alert">{{ error() }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" autocomplete="email" [attr.aria-invalid]="show(form.controls.email)" />
+      @if (show(form.controls.email)) {
+        <p class="field-error">{{ fieldMessage(form.controls.email, 'Email') }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" autocomplete="current-password" [attr.aria-invalid]="show(form.controls.password)" />
+      @if (show(form.controls.password)) {
+        <p class="field-error">{{ fieldMessage(form.controls.password, 'Password') }}</p>
+      }
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" [disabled]="loading()">
+      {{ loading() ? 'Logging in…' : 'Log in' }}
+    </button>
+  </form>
+
+  <p class="auth-switch">New to CampusNotes? <a routerLink="/register">Create an account</a></p>
+</section>

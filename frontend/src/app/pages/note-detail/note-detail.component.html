@@ -1,0 +1,41 @@
+<section class="page">
+  <p><a routerLink="/notes">← Back to notes</a></p>
+
+  <app-state [loading]="loading()" loadingText="Loading note…" [error]="error()" (retry)="reload()">
+    @if (note(); as n) {
+      <article class="card detail-card">
+        <h1>{{ n.title }}</h1>
+        <p class="badges">
+          <span class="badge badge-info">{{ n.subject }}</span>
+          <span class="badge badge-neutral">{{ n.unit }}</span>
+          <span class="badge badge-neutral">PDF</span>
+        </p>
+
+        <dl class="meta-list">
+          <div><dt>Subject</dt><dd>{{ n.subject }}</dd></div>
+          <div><dt>Unit</dt><dd>{{ n.unit }}</dd></div>
+          <div><dt>File type</dt><dd>PDF</dd></div>
+        </dl>
+
+        <h2 class="section-title">Description</h2>
+        @if (n.description) {
+          <p class="prewrap">{{ n.description }}</p>
+        } @else {
+          <p class="muted">No description provided.</p>
+        }
+
+        @if (actionError()) {
+          <div class="alert alert-error" role="alert">{{ actionError() }}</div>
+        }
+        <div class="actions-row">
+          <button type="button" class="btn btn-primary" (click)="open(n)" [disabled]="busy() !== null">
+            {{ busy() === 'open' ? 'Opening…' : 'Open PDF' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="download(n)" [disabled]="busy() !== null">
+            {{ busy() === 'download' ? 'Downloading…' : 'Download' }}
+          </button>
+        </div>
+      </article>
+    }
+  </app-state>
+</section>

@@ -1,0 +1,58 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Notes</h1>
+    <p class="muted">Search approved notes, or <a routerLink="/browse">browse by course</a>.</p>
+  </header>
+
+  <form class="search-bar" (ngSubmit)="submitSearch()" role="search">
+    <label for="search" class="visually-hidden">Search notes</label>
+    <input id="search" type="search" [formControl]="search" maxlength="100" placeholder="Search by title or description" autocomplete="off" />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  @if (filterLabel(); as label) {
+    <p class="filter-chip">
+      <span>Showing: {{ label }}</span>
+      <a routerLink="/notes" [queryParams]="query() ? { q: query() } : {}">Clear filter</a>
+    </p>
+  }
+
+  @if (actionError()) {
+    <div class="alert alert-error" role="alert">{{ actionError() }}</div>
+  }
+
+  <app-state
+    [loading]="loading()"
+    loadingText="Loading notes…"
+    [error]="error() ? 'Unable to load notes. ' + error() : null"
+    [empty]="notes().length === 0"
+    [emptyText]="emptyText()"
+    (retry)="reload()"
+  >
+    <p class="result-count" aria-live="polite">{{ notes().length }} {{ notes().length === 1 ? 'note' : 'notes' }} found</p>
+    <ul class="note-grid">
+      @for (note of notes(); track note.id) {
+        <li class="card note-card">
+          <h2 class="note-title"><a [routerLink]="['/notes', note.id]">{{ note.title }}</a></h2>
+          <p class="badges">
+            <span class="badge badge-info">{{ note.subject }}</span>
+            <span class="badge badge-neutral">{{ note.unit }}</span>
+            <span class="badge badge-neutral">PDF</span>
+          </p>
+          @if (note.description) {
+            <p class="note-desc">{{ note.description }}</p>
+          }
+          <div class="note-actions">
+            <a class="btn btn-secondary btn-small" [routerLink]="['/notes', note.id]">Details</a>
+            <button type="button" class="btn btn-primary btn-small" (click)="open(note)" [disabled]="busyKey() !== null">
+              {{ busyKey() === 'open-' + note.id ? 'Opening…' : 'Open' }}
+            </button>
+            <button type="button" class="btn btn-secondary btn-small" (click)="download(note)" [disabled]="busyKey() !== null">
+              {{ busyKey() === 'download-' + note.id ? 'Downloading…' : 'Download' }}
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  </app-state>
+</section>

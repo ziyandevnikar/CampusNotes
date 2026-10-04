@@ -1,0 +1,48 @@
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" routerLink="/" (click)="closeMenu()">
+      <span class="brand-mark" aria-hidden="true">CN</span>
+      <span class="brand-name">CampusNotes</span>
+      @if (auth.role() === 'admin') {
+        <span class="badge badge-admin">Admin</span>
+      }
+    </a>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      aria-controls="site-nav"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      <span class="visually-hidden">Menu</span>
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+    </button>
+
+    <nav id="site-nav" class="site-nav" [class.open]="menuOpen()" aria-label="Main">
+      @if (!auth.isLoggedIn()) {
+        <a routerLink="/login" routerLinkActive="active" (click)="closeMenu()">Login</a>
+        <a routerLink="/register" routerLinkActive="active" (click)="closeMenu()">Register</a>
+      } @else if (auth.role() === 'admin') {
+        <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Dashboard</a>
+        <a routerLink="/admin/pending" routerLinkActive="active" (click)="closeMenu()">Pending Notes</a>
+        <button type="button" class="nav-logout" (click)="logout()">Logout</button>
+      } @else {
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">Dashboard</a>
+        <a routerLink="/browse" routerLinkActive="active" (click)="closeMenu()">Browse Notes</a>
+        <a routerLink="/upload" routerLinkActive="active" (click)="closeMenu()">Upload Note</a>
+        <button type="button" class="nav-logout" (click)="logout()">Logout</button>
+      }
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="container main">
+  <router-outlet />
+</main>
+
+<footer class="site-footer">
+  <div class="container">CampusNotes · Find and share academic notes.</div>
+</footer>

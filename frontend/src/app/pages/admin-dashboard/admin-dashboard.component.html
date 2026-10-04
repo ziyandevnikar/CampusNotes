@@ -1,0 +1,35 @@
+<section class="page">
+  @if (denied) {
+    <div class="alert alert-error" role="alert">Access denied.</div>
+  }
+
+  <header class="hero">
+    <h1>CampusNotes Admin</h1>
+    <p class="lead">Review student uploads before they are published.</p>
+  </header>
+
+  <div class="card">
+    <h2>Pending Notes</h2>
+    <app-state [loading]="loading()" loadingText="Checking the review queue…" [error]="error()" (retry)="load()">
+      @if (pendingCount() === 0) {
+        <p>No pending notes.</p>
+      } @else {
+        <p>
+          <strong>{{ pendingCount() }}</strong>
+          {{ pendingCount() === 1 ? 'note is' : 'notes are' }} waiting for review.
+        </p>
+      }
+      <a class="btn btn-primary" routerLink="/admin/pending">Open pending notes</a>
+    </app-state>
+  </div>
+
+  <div class="card">
+    <h2>How moderation works</h2>
+    <ol class="steps">
+      <li>Open <strong>Pending Notes</strong> to see uploads waiting for a decision.</li>
+      <li><strong>Review</strong> a note to read its details and check the PDF.</li>
+      <li><strong>Approve</strong> to publish it to students, or <strong>Reject</strong> to keep it hidden.</li>
+    </ol>
+    <p class="muted">A decision is final: processed notes cannot be changed again.</p>
+  </div>
+</section>

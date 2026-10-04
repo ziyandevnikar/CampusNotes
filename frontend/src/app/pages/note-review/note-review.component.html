@@ -1,0 +1,74 @@
+<section class="page">
+  <p><a routerLink="/admin/pending">← Back to pending notes</a></p>
+
+  <app-state [loading]="loading()" loadingText="Loading note…" [error]="error()" (retry)="load()">
+    @if (note(); as n) {
+      <article class="card detail-card">
+        <div class="title-row">
+          <h1>{{ n.title }}</h1>
+          <span class="badge badge-{{ n.status }}">{{ n.status }}</span>
+        </div>
+
+        @if (notice()) {
+          <div class="alert alert-success" role="status">
+            {{ notice() }}
+            <a routerLink="/admin/pending">Back to the queue</a>
+          </div>
+        }
+        @if (actionError()) {
+          <div class="alert alert-error" role="alert">{{ actionError() }}</div>
+        }
+
+        <dl class="meta-list">
+          <div><dt>Subject</dt><dd>{{ n.subject }}</dd></div>
+          <div><dt>Unit</dt><dd>{{ n.unit }}</dd></div>
+          <div><dt>Uploader</dt><dd>User #{{ n.uploader_id }}</dd></div>
+          <div><dt>Uploaded</dt><dd>{{ n.created_at | date: 'd MMM y, h:mm a' }}</dd></div>
+          <div><dt>File type</dt><dd>{{ n.file_type.toUpperCase() }}</dd></div>
+        </dl>
+
+        <h2 class="section-title">Description</h2>
+        @if (n.description) {
+          <p class="prewrap">{{ n.description }}</p>
+        } @else {
+          <p class="muted">No description provided.</p>
+        }
+
+        <div class="actions-row">
+          <button type="button" class="btn btn-secondary" (click)="openPdf()" [disabled]="busy() !== null">
+            {{ busy() === 'open' ? 'Opening…' : 'Open PDF in new tab' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="downloadPdf(n)" [disabled]="busy() !== null">
+            {{ busy() === 'download' ? 'Downloading…' : 'Download PDF' }}
+          </button>
+        </div>
+
+        @if (n.status === 'pending') {
+          <div class="decision">
+            <h2 class="section-title">Decision</h2>
+            <div class="actions-row">
+              <button type="button" class="btn btn-success" (click)="moderate(n, 'approve')" [disabled]="busy() !== null">
+                {{ busy() === 'approve' ? 'Approving…' : 'Approve' }}
+              </button>
+              <button type="button" class="btn btn-danger" (click)="moderate(n, 'reject')" [disabled]="busy() !== null">
+                {{ busy() === 'reject' ? 'Rejecting…' : 'Reject' }}
+              </button>
+            </div>
+          </div>
+        } @else {
+          <p class="muted">This note has already been {{ n.status }}. Decisions cannot be changed.</p>
+        }
+      </article>
+
+      <section class="card">
+        <h2 class="section-title">PDF preview</h2>
+        <app-state [loading]="previewLoading()" loadingText="Loading PDF…" [error]="previewError()" (retry)="loadPreview()">
+          @if (preview(); as url) {
+            <iframe class="pdf-frame" [src]="url" title="PDF preview of {{ n.title }}"></iframe>
+            <p class="hint">If the preview does not show on your device, use “Open PDF in new tab”.</p>
+          }
+        </app-state>
+      </section>
+    }
+  </app-state>
+</section>

@@ -1,0 +1,77 @@
+<section class="page page-narrow">
+  @if (done()) {
+    <div class="card">
+      <h1>Note uploaded for approval.</h1>
+      <div class="alert alert-success" role="status">
+        Thank you! Your note is now <strong>pending</strong>. It will become visible to other students only after an admin approves it.
+      </div>
+      <div class="actions-row">
+        <button type="button" class="btn btn-primary" (click)="uploadAnother()">Upload another note</button>
+        <a class="btn btn-secondary" routerLink="/browse">Browse notes</a>
+      </div>
+    </div>
+  } @else {
+    <header class="page-header">
+      <h1>Upload a note</h1>
+      <p class="muted">Share a PDF. Uploaded notes are reviewed by an admin before other students can see them.</p>
+    </header>
+
+    @if (error()) {
+      <div class="alert alert-error" role="alert">{{ error() }}</div>
+    }
+
+    <form class="card" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="title">Title</label>
+        <input id="title" type="text" formControlName="title" [attr.maxlength]="maxTitle" (input)="clearError('title')" [attr.aria-invalid]="fieldErrors().title ? true : null" />
+        @if (fieldErrors().title) {
+          <p class="field-error">{{ fieldErrors().title }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="description">Description <span class="optional">(optional)</span></label>
+        <textarea id="description" rows="4" formControlName="description" [attr.maxlength]="maxDescription" (input)="clearError('description')"></textarea>
+        @if (fieldErrors().description) {
+          <p class="field-error">{{ fieldErrors().description }}</p>
+        }
+      </div>
+
+      <fieldset class="field fieldset">
+        <legend>Where does this note belong?</legend>
+        <app-unit-picker [locked]="uploading()" (unitSelected)="onUnit($event)" />
+        @if (fieldErrors().unit) {
+          <p class="field-error">{{ fieldErrors().unit }}</p>
+        }
+      </fieldset>
+
+      <div class="field">
+        <label for="file">PDF file</label>
+        <input id="file" #fileInput type="file" accept="application/pdf,.pdf" (change)="onFile($event)" [disabled]="uploading()" />
+        <p class="hint">PDF only, up to 10 MB.</p>
+        @if (file(); as f) {
+          <p class="file-chip">
+            <span>{{ f.name }} ({{ formatSize(f.size) }})</span>
+            @if (!uploading()) {
+              <button type="button" class="link-button" (click)="clearFile()">Remove</button>
+            }
+          </p>
+        }
+        @if (fieldErrors().file) {
+          <p class="field-error">{{ fieldErrors().file }}</p>
+        }
+      </div>
+
+      @if (uploading()) {
+        <div class="progress" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="progress()">
+          <div class="progress-bar" [style.width.%]="progress()"></div>
+        </div>
+        <p class="hint" role="status">{{ progress() < 100 ? 'Uploading… ' + progress() + '%' : 'Upload complete, saving…' }}</p>
+      }
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="uploading()">
+        {{ uploading() ? 'Uploading…' : 'Upload note' }}
+      </button>
+    </form>
+  }
+</section>

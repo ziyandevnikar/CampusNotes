@@ -1,0 +1,25 @@
+<section class="page">
+  @if (denied) {
+    <div class="alert alert-error" role="alert">Access denied. That page is for administrators.</div>
+  }
+
+  <header class="hero">
+    <h1>CampusNotes</h1>
+    <p class="lead">Find and share academic notes.</p>
+  </header>
+
+  <div class="grid grid-2">
+    <a class="card action-card" routerLink="/browse">
+      <h2>Browse Notes</h2>
+      <p class="muted">Pick your course, semester, subject and unit, or search all approved notes.</p>
+      <span class="btn btn-primary">Browse Notes</span>
+    </a>
+    <a class="card action-card" routerLink="/upload">
+      <h2>Upload Note</h2>
+      <p class="muted">Share a PDF with other students. An admin reviews it before it goes live.</p>
+      <span class="btn btn-secondary">Upload Note</span>
+    </a>
+  </div>
+
+  <p class="center-link"><a routerLink="/notes">Search all notes →</a></p>
+</section>
