@@ -15,5 +15,6 @@ def get_connection():
         database=config.DATABASE_NAME,
         charset="utf8mb4",
         cursorclass=DictCursor,
+        ssl={"ca": config.DATABASE_SSL_CA},
     )
 

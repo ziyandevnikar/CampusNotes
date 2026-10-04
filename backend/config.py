@@ -40,6 +40,10 @@ DATABASE_PORT = _env_int("DATABASE_PORT", os.environ.get("DB_PORT", "3306"))
 DATABASE_USER = os.environ.get("DATABASE_USER", os.environ.get("DB_USER", "root"))
 DATABASE_PASSWORD = os.environ.get("DATABASE_PASSWORD", os.environ.get("DB_PASSWORD", ""))
 DATABASE_NAME = os.environ.get("DATABASE_NAME", os.environ.get("DB_NAME", "campusnotes"))
+DATABASE_SSL_CA = os.environ.get(
+    "DATABASE_SSL_CA",
+    str(Path(__file__).resolve().parent / "certs" / "isrgrootx1.pem"),
+).strip()
 
 # Backwards-compatible names used by the Stage 8 tests/modules.
 DB_HOST = DATABASE_HOST
